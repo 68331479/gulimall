@@ -237,7 +237,7 @@ public class MallSearchServiceImpl implements MallSearchService {
             }
         }
         result.setProducts(esModels);
-        //2, 当前所有商品涉及到的所有属性信息
+        //2, 当前所有商品涉及到的所有属性信息.
         ParsedNested attr_agg = response.getAggregations().get("attr_agg");
         List<SearchResult.AttrVo> attrVos=new ArrayList<>();
         ParsedLongTerms attr_id_agg = attr_agg.getAggregations().get("attr_id_agg");
