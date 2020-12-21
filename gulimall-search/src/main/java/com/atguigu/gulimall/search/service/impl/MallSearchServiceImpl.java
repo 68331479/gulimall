@@ -105,7 +105,10 @@ public class MallSearchServiceImpl implements MallSearchService {
             boolQuery.filter(QueryBuilders.termsQuery("brandId",param.getBrandId()));
         }
         //1.3 filter-按照是否有库存进行查询
-        boolQuery.filter(QueryBuilders.termQuery("hasStock",(param.getHasStock()==1)?true:false));
+        if(param.getHasStock()!=null){
+            boolQuery.filter(QueryBuilders.termQuery("hasStock",param.getHasStock()==1));
+        }
+
         //1.4 filter- 按照价格区间查询
         if(!StringUtils.isEmpty(param.getSkuPrice())){
             //价格区间的格式 //1_500/_500/500_

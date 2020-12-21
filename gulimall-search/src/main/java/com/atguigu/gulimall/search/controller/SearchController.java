@@ -24,6 +24,7 @@ public class SearchController {
         //去ES中检索商品
 
         SearchResult result = mallSearchService.search(param);
+
         model.addAttribute("result",result);
         return "list";
     }

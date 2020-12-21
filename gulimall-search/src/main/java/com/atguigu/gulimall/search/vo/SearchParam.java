@@ -35,7 +35,7 @@ public class SearchParam {
         brandId
         attrs attr=1_其他：安卓  冒号分割&attrs=2_5:6
      */
-    private Integer hasStock=1;//是否显示有货， 页面传递来的是0， 1
+    private Integer hasStock;//是否显示有货， 页面传递来的是0， 1
     private String skuPrice;//价格区间查询
     private List<Long> brandId;//品牌筛选,, 支持多选
     private List<String> attrs;//按照属性进行筛选

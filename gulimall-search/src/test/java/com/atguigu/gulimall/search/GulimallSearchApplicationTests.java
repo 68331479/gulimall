@@ -138,5 +138,35 @@ public class GulimallSearchApplicationTests {
         private String state;
     }
 
+    static int times;
+
+    public void hano(){
+
+
+    }
+
+    public static void move(int disk,char M,char N){
+        times=times+1;
+        System.out.println("第 "+(times)+" 次移动:");
+        System.out.println("         "+disk+"号盘子从 "+M+"柱子================>"+N+"柱子");
+    }
+
+
+    public static void hannoi(int n,char A,char B,char C){
+        if(n==1){
+            move(n,A,C);
+        }else{
+            hannoi(n-1,A,C,B);
+            move(n,A,C);
+            hannoi(n-1,B,A,C);
+        }
+
+    }
+
+    @Test
+    public void testhanno(){
+        hannoi(3,'A','B','C');
+
+    }
 
 }
