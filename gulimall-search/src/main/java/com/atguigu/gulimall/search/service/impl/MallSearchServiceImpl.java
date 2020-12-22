@@ -121,15 +121,18 @@ public class MallSearchServiceImpl implements MallSearchService {
                     }
              */
             RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("skuPrice");
+            System.out.println("skuPrice String==========>"+param.getSkuPrice());
             String[] s = param.getSkuPrice().split("_");
-            if(s.length==2){//区间
-                rangeQuery.gte(new BigDecimal(s[0]));
-                rangeQuery.lte(new BigDecimal(s[1]));
-            }else if(s.length==1){
+            if((!param.getSkuPrice().startsWith("_")) && (!param.getSkuPrice().endsWith("_"))){//区间
+                rangeQuery.gte(s[0]);
+                rangeQuery.lte(s[1]);
+            }else {
                 if(param.getSkuPrice().startsWith("_")){
-                    rangeQuery.lte(new BigDecimal(s[0]));
+                    System.out.println(s[1]);
+                    rangeQuery.lte(new BigDecimal(s[1]));
                 }
                 if(param.getSkuPrice().endsWith("_")){
+                    System.out.println(s[0]);
                     rangeQuery.gte(new BigDecimal(s[0]));
                 }
             }
