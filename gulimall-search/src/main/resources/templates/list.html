@@ -403,7 +403,7 @@
         <a href="http://gulimall.com"><img src="/static/search/./image/logo1.jpg" alt=""></a>
     </div>
     <div class="header_form">
-        <input id="keyword_input" type="text" placeholder="搜一搜" />
+        <input id="keyword_input" type="text" placeholder="手机" th:value="${param.keyword}" />
         <a href="javascript:searchByKeyword()">搜索</a>
     </div>
     <div class="header_ico">
@@ -1016,13 +1016,29 @@
             <div class="JD_con_right">
                 <div class="filter">
                     <!--综合排序-->
+                    <!-- sort=saleCount_asc/desc-->
                     <div class="filter_top">
-                        <div class="filter_top_left">
-                            <a href="/static/search/#">综合排序</a>
-                            <a href="/static/search/#">销量</a>
-                            <a href="/static/search/#">价格</a>
+                        <div class="filter_top_left" th:with="p = ${param.sort}">
+                            <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p,'hotScore') && #strings.endsWith(p,'desc'))?'sort_a desc':'sort_a'}"
+                               th:attr="style=${(#strings.isEmpty(p) || #strings.startsWith(p,'hotScore'))?
+                               'color:#FFF;border-color:#e4393c;background: #e4393c ':
+                               'color:#333;border-color:#CCC;background: #FFF '}"
+                               sort="hotScore" href="/static/search/#">综合排序 [[${(!#strings.isEmpty(p) && #strings.startsWith(p,'hotScore') && #strings.endsWith(p,'desc'))?'↓':"↑"}]]</a>
+                            <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p,'saleCount') && #strings.endsWith(p,'desc'))?'sort_a desc':'sort_a'}"
+                               th:attr="style=${(!#strings.isEmpty(p) && #strings.startsWith(p,'saleCount'))?
+                               'color:#FFF;border-color:#e4393c;background: #e4393c ':
+                               'color:#333;border-color:#CCC;background: #FFF '}"
+                               sort="saleCount" href="/static/search/#">销量 [[${(!#strings.isEmpty(p) && #strings.startsWith(p,'saleCount') && #strings.endsWith(p,'desc'))?'↓':"↑"}]]</a>
+                            <a th:class="${(!#strings.isEmpty(p) && #strings.startsWith(p,'skuPrice') && #strings.endsWith(p,'desc'))?'sort_a desc':'sort_a'}"
+                               th:attr="style=${(!#strings.isEmpty(p) && #strings.startsWith(p,'skuPrice'))?
+                               'color:#FFF;border-color:#e4393c;background: #e4393c ':
+                               'color:#333;border-color:#CCC;background: #FFF '}"
+                               sort="skuPrice" href="/static/search/#">价格 [[${(!#strings.isEmpty(p) && #strings.startsWith(p,'skuPrice') && #strings.endsWith(p,'desc'))?'↓':"↑"}]]</a>
                             <a href="/static/search/#">评论分</a>
                             <a href="/static/search/#">上架时间</a>
+                            <input id="skuPriceFrom" type="number" style="width: 100px; margin-left: 30px"> -
+                            <input id="skuPriceTo" type="number" style="width: 100px">
+                            <button id="skuPriceSearchBtn"> 确定 </button>
                         </div>
                         <div class="filter_top_right">
                             <span class="fp-text">
@@ -1193,24 +1209,33 @@
                     <div class="filter_page">
                         <div class="page_wrap">
                             <span class="page_span1">
-                                <a href="/static/search/#">
+                                <a class="page_a"
+                                   th:attr="pn=${result.pageNumber - 1}"
+                                   th:if="${result.pageNumber>1}">
                                     < 上一页
                                 </a>
-                                <a href="/static/search/#" style="border: 0;color:#ee2222;background: #fff">1</a>
-                                <a href="/static/search/#">2</a>
-                                <a href="/static/search/#">3</a>
-                                <a href="/static/search/#" style="border: 0;font-size: 20px;color: #999;background: #fff">...</a>
-                                <a href="/static/search/#">169</a>
-                                <a href="/static/search/#">
+                                <a class="page_a"
+                                   th:attr="pn=${nav},style=${nav==result.pageNumber?'border: 0;color:#ee2222;background: #fff':''}"
+                                   th:each="nav : ${result.pageNavs}">[[${nav}]]</a>
+                                <!--<a class="page_a" href="/static/search/#" style="border: 0;font-size: 20px;color: #999;background: #fff">...</a>-->
+                                <!--<a class="page_a" href="/static/search/#">169</a>-->
+                                <a class="page_a"
+                                   th:attr="pn=${result.pageNumber + 1}"
+                                   th:if="${result.pageNumber < result.totalPages}">
                                     下一页 >
                                 </a>
                             </span>
+
                             <span class="page_span2">
-                                <em>共<b>169</b>页&nbsp;&nbsp;到第</em>
-                                <input type="number" value="1">
-                                <em>页</em>
-                                <a href="/static/search/#">确定</a>
+                                <em>共<b>[[${result.totalPages}]]</b>页</em>
                             </span>
+
+                            <!--<span class="page_span2">-->
+                                <!--<em>共<b>[[${result.totalPages}]]</b>页&nbsp;&nbsp;到第</em>-->
+                                <!--<input type="number" value="1">-->
+                                <!--<em>页</em>-->
+                                <!--<a class="page_submit">确定</a>&ndash;&gt;-->
+                            <!--</span>-->
                         </div>
                     </div>
                 </div>
@@ -1958,17 +1983,94 @@
     function searchProducts(name,value) {
         //拿到原来的页面地址
         var href=location.href + "";
-        if(href.indexOf("?")!=-1){//匹配问好
-            location.href = location.href + "&" +name +"="+value;
-        }else{
-            location.href = location.href + "?" +name +"="+value;
-        }
+        location.href=replaceOrAddParamVal(href,name,value);
     }
 
     function searchByKeyword() {
+        var href = location.href;
         searchProducts("keyword",$("#keyword_input").val())
     }
 
+    $(".page_a").click(function () {
+        var pn = $(this).attr("pn")  //取出自定义属性pn的值
+        var href = location.href;
+        location.href = replaceOrAddParamVal(href,"pageNumber",pn);
+        return false;
+    });
+
+    $(".sort_a").click(function () {
+        //1,当前被点击的元素变为选中状态
+        //1.1 改变样式
+        // demo 原生JS changeStyle(this);
+
+        //根据地址栏有没有排序字段 给排序区域添加样式
+
+
+        $(this).toggleClass("desc")
+        //1.2 跳转到指定位置  sort=saleCount_asc/desc
+        var sort = $(this).attr("sort");
+        sort = $(this).hasClass("desc")?(sort+"_desc"):(sort+"_asc");
+        location.href = replaceOrAddParamVal(location.href,"sort",sort);
+
+        //禁用默认行为
+        return false;
+    });
+
+    function replaceOrAddParamVal(url,paramName,val) {
+        //1， 如果没有就添加， 有就替换
+        var oUrl=url.toString();
+
+        if(oUrl.indexOf("?")==-1) {//用有没有问号来判断是不是第一个条件
+            //是第一个条件
+            var nUrl = oUrl + "?" +paramName +"="+val;
+            return nUrl;
+        }else{
+            var nUrl="";
+            if(oUrl.indexOf(paramName)==-1){//判读是否已经有该条件
+                nUrl = oUrl + "&" +paramName +"="+val;
+                return nUrl;
+            }else{
+                var re=eval('/('+paramName+'=)([^&]*)/gi');
+                nUrl=oUrl.replace(re,paramName+"="+val);
+                return nUrl;
+            }
+        }
+    }
+
+    function changeStyle(ele) {
+        //去除兄弟元素样式
+        $(".sort_a").css({"color":"#333","border-color":"#CCC","background": "#FFF"})//非高亮样式
+        //去除兄弟元素的上下箭头
+        $(".sort_a").each(function () {
+            var text = $(this).text().replace("↓","").replace("↑","");
+            $(this).text(text);
+        });
+        //自身样式
+        $(ele).css({"color":"#FFF","border-color":"#e4393c","background": "#e4393c"}) //高亮样式
+        //1.2 改变生降序
+        $(ele).toggleClass("desc");//加上就是降序，不加就是升序
+        if($(ele).hasClass("desc")){
+            //降序
+            var text = $(ele).text().replace("↓","").replace("↑","");
+            text = text+"↓";
+            $(ele).text(text);
+        }else {
+            //升序
+            var text = $(ele).text().replace("↓","").replace("↑","");
+            text = text+"↑";
+            $(ele).text(text);
+        }
+    }
+    
+    $("#skuPriceSearchBtn").click(function () {
+        //1， 价格区间的查询条件
+      var from = $("#skuPriceFrom").val;
+      var to=   $("#skuPriceTo").val;
+
+      var query = from +"_"+to;
+      location.href = replaceOrAddParamVal(location.href,"skuPrice",query);
+
+    });
 
 </script>
 </body>

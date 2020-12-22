@@ -22,6 +22,8 @@ public class SearchResult {
 
     private Integer totalPages;//总页码
 
+    private List<Integer> pageNavs;
+
     private List<BrandVo> brands;//当前查询结果所有涉及到的品牌
 
     private List<CatalogVo> catalogs;//当前查询结果所有涉及到的三级分类
