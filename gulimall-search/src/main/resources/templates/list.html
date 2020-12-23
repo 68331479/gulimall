@@ -763,6 +763,13 @@
                 <a href="/static/search/#">游戏手机</a>
             </div>
         </div>
+
+        <div>
+            <div class="JD_ipone_one c">
+                <!--遍历面包屑功能-->
+                <a th:href="${nav.link}" th:each="nav : ${result.navs}"><span th:text="${nav.navName}"></span>:<span th:text="${navValue}"></span>x</a>
+            </div>
+        </div>
         <i><img src="/static/search/image/right-@1x.png" alt=""></i>
     </div>
 </div>
@@ -1146,8 +1153,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/static/search/#">
-                                        <i></i>
+                                    <a href="#" th:with="checked=${param.hasStock}">
+                                        <input id="showHasStock" type="checkbox"
+                                               th:checked="${#strings.equals(checked,'1')}">
                                         仅显示有货
                                     </a>
                                 </li>
@@ -2071,6 +2079,18 @@
       location.href = replaceOrAddParamVal(location.href,"skuPrice",query);
 
     });
+
+    $("#showHasStock").change(function () {
+        if($(this).prop('checked')){//选中状态，添加hasStock方法
+            location.href = replaceOrAddParamVal(location.href,"hasStock",1);
+        }else{//没选中状态， 删除hasStock 方法
+            var re=eval('/(&hasStock=)([^&]*)/gi');
+            var nUrl=(location.href+"").replace(re,'');//替换hasStock为空字符串
+            location.href =  nUrl;
+        }
+
+        return false;//取消默认行为
+    })
 
 </script>
 </body>
