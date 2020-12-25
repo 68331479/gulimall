@@ -767,7 +767,7 @@
         <div>
             <div class="JD_ipone_one c">
                 <!--遍历面包屑功能-->
-                <a th:href="${nav.link}" th:each="nav : ${result.navs}"><span th:text="${nav.navName}"></span>:<span th:text="${navValue}"></span>x</a>
+                <a th:href="${nav.link}" th:each="nav : ${result.navs}"><span th:text="${nav.navName}"></span> : <span th:text="${nav.navValue}"></span> x</a>
             </div>
         </div>
         <i><img src="/static/search/image/right-@1x.png" alt=""></i>
@@ -783,9 +783,9 @@
                 <h3><b>手机</b><em>商品筛选</em></h3>
                 <div class="st-ext">共&nbsp;<span>10135</span>个商品 </div>
             </div>
-            <div class="JD_nav_logo">
+            <div class="JD_nav_logo" th:with="brandid = ${param.brandId}">
                 <!--品牌-->
-                <div class="JD_nav_wrap">
+                <div  th:if ="${#strings.isEmpty(brandid)}"class="JD_nav_wrap">
                     <div class="sl_key">
                         <span><b>品牌：</b></span>
                     </div>
@@ -834,7 +834,7 @@
                     </div>
                 </div>
                 <!--其他所有需要展示的属性-->
-                <div class="JD_pre" th:each="attr : ${result.attrs}">
+                <div class="JD_pre" th:each="attr : ${result.attrs}" th:if="${!#lists.contains(result.attrIds,attr.attrId)}">
                     <div class="sl_key">
                         <span th:text="${attr.attrName}">屏幕尺寸：</span>
                     </div>
@@ -1177,7 +1177,7 @@
                                 <a href="/static/search/#">关注</a>
                             </div>
                             <p class="da">
-                                <a href="/static/search/#">
+                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|">
                                     <img th:src="${product.skuImg}" class="dim">
                                 </a>
                             </p>
@@ -2027,21 +2027,26 @@
     function replaceOrAddParamVal(url,paramName,val) {
         //1， 如果没有就添加， 有就替换
         var oUrl=url.toString();
-
-        if(oUrl.indexOf("?")==-1) {//用有没有问号来判断是不是第一个条件
-            //是第一个条件
-            var nUrl = oUrl + "?" +paramName +"="+val;
-            return nUrl;
-        }else{
-            var nUrl="";
-            if(oUrl.indexOf(paramName)==-1){//判读是否已经有该条件
-                nUrl = oUrl + "&" +paramName +"="+val;
+        if(oUrl.indexOf("&attrs=")==-1){//没有&attrs= 字符串，
+            if(oUrl.indexOf("?")==-1) {//用有没有问号来判断是不是第一个条件
+                //是第一个条件
+                var nUrl = oUrl + "?" +paramName +"="+val;
                 return nUrl;
             }else{
-                var re=eval('/('+paramName+'=)([^&]*)/gi');
-                nUrl=oUrl.replace(re,paramName+"="+val);
-                return nUrl;
+                var nUrl="";
+                if(oUrl.indexOf(paramName)==-1){//判读是否已经有该条件
+                    nUrl = oUrl + "&" +paramName +"="+val;
+                    return nUrl;
+                }else{
+                    var re=eval('/('+paramName+'=)([^&]*)/gi');
+                    nUrl=oUrl.replace(re,paramName+"="+val);
+                    return nUrl;
+                }
             }
+        }else{//有&attrs=字符串 ， 直接追加
+            var nUrl="";
+            nUrl = oUrl + "&" +paramName +"="+val;
+            return nUrl;
         }
     }
 

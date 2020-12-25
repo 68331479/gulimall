@@ -9,6 +9,7 @@ import com.atguigu.gulimall.search.constant.EsConstant;
 import com.atguigu.gulimall.search.feign.ProductFeignService;
 import com.atguigu.gulimall.search.service.MallSearchService;
 import com.atguigu.gulimall.search.vo.AttrResVo;
+import com.atguigu.gulimall.search.vo.BrandVo;
 import com.atguigu.gulimall.search.vo.SearchParam;
 import com.atguigu.gulimall.search.vo.SearchResult;
 import org.apache.lucene.search.join.ScoreMode;
@@ -251,6 +252,7 @@ public class MallSearchServiceImpl implements MallSearchService {
             }
         }
         result.setProducts(esModels);
+
         //2, 当前所有商品涉及到的所有属性信息.
         ParsedNested attr_agg = response.getAggregations().get("attr_agg");
         List<SearchResult.AttrVo> attrVos = new ArrayList<>();
@@ -342,6 +344,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                 String[] s = attr.split("_");
                 navVo.setNavValue(s[1]);
                 R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                result.getAttrIds().add(Long.parseLong(s[0]));
                 if (r.getCode() == 0) {
                     AttrResVo attrResVo = r.getData("attr", new TypeReference<AttrResVo>() {
                     });
@@ -352,23 +355,50 @@ public class MallSearchServiceImpl implements MallSearchService {
 
                 //2, 取消了面包屑以后， 跳转地址， 将请求地址的url中当前条件置空即可
                 //拿到所有的查询条件， 去掉当前
-
-                try {
-                    String encode = URLEncoder.encode(attr, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                String replace = param.get_queryString().replace("&attrs=" + attr, "");
+                String replace = replaceQueryString(param, attr,"attrs");
                 navVo.setLink("http://search.gulimall.com/list.html?" + replace);
 
                 return navVo;
             }).collect(Collectors.toList());
 
-
             result.setNavs(collect);
         }
+
+        //品牌，分类
+        if(param.getBrandId()!=null && param.getBrandId().size()>0){//将品牌信息上到面包屑导航
+            List<SearchResult.NavVo> navs = result.getNavs();
+            SearchResult.NavVo navVo = new SearchResult.NavVo();
+            navVo.setNavName("品牌");
+            //远程调用方法通过品牌id查询出品牌名称
+            R r = productFeignService.brandsinfo(param.getBrandId());
+            if(r.getCode()==0){
+                List<BrandVo> brands = r.getData("brands", new TypeReference<List<BrandVo>>() {});
+                System.out.println("==================="+brands);
+                StringBuffer buffer=new StringBuffer();
+                String replace="";
+                for (BrandVo brand : brands) {
+                    buffer.append(brand.getName()+"");
+                     replace = replaceQueryString(param, brand.getBrandId()+"","brandId");
+                }
+                navVo.setNavValue(buffer.toString());
+                navVo.setLink("http://search.gulimall.com/list.html?" + replace);
+            }
+            navs.add(navVo);
+        }
+        //TODO 分类
+
         return result;
 
 
+    }
+
+    private String replaceQueryString(SearchParam param, String value,String key) {
+        String encode=null;
+        try {
+             encode = URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return param.get_queryString().replace("&"+key+"=" + encode, "");
     }
 }

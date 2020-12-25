@@ -3,9 +3,11 @@ package com.atguigu.gulimall.product;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.atguigu.gulimall.product.dao.AttrGroupDao;
 import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.service.BrandService;
 import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.vo.SpuItemAttrGroupAttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -93,6 +95,15 @@ class GulimallProductApplicationTests {
     @Test
     public void testRedisson(){
         System.out.println(redissonClient);
+    }
+
+
+    @Autowired
+    AttrGroupDao attrGroupDao;
+    @Test
+    public void testAttrGroup(){
+        List<SpuItemAttrGroupAttrVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(5L, 225L);
+        System.out.println(attrGroupWithAttrsBySpuId);
     }
 
 }
