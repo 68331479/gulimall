@@ -120,7 +120,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         skuItemVo.setImages(images);
         //3 , spu销售属性组合
         List<SkuItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.getSaleAttrsBySpuId(spuId);
-        skuItemVo.setSaleAttrVos(saleAttrVos);
+        skuItemVo.setSaleAttr(saleAttrVos);
         //4 , spu 的属性 pms_spu_info_desc  图片介绍
         SpuInfoDescEntity spuInfo = spuInfoDescService.getById(spuId);
         skuItemVo.setDesc(spuInfo);
@@ -130,6 +130,6 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             = attrGroupService.getAttrGroupWithAttrsBySpuId(spuId,catalogId);
         skuItemVo.setGroupAttrs(attrGroupAttrVos);
 
-        return null;
+        return skuItemVo;
     }
 }

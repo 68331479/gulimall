@@ -4,9 +4,11 @@ package com.atguigu.gulimall.product;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.atguigu.gulimall.product.dao.AttrGroupDao;
+import com.atguigu.gulimall.product.dao.SkuSaleAttrValueDao;
 import com.atguigu.gulimall.product.entity.BrandEntity;
 import com.atguigu.gulimall.product.service.BrandService;
 import com.atguigu.gulimall.product.service.CategoryService;
+import com.atguigu.gulimall.product.vo.SkuItemSaleAttrVo;
 import com.atguigu.gulimall.product.vo.SpuItemAttrGroupAttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -101,9 +103,18 @@ class GulimallProductApplicationTests {
     @Autowired
     AttrGroupDao attrGroupDao;
     @Test
-    public void testAttrGroup(){
+    public void testSpuItemAttrGroupDao(){
         List<SpuItemAttrGroupAttrVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(5L, 225L);
         System.out.println(attrGroupWithAttrsBySpuId);
+    }
+
+    @Autowired
+    SkuSaleAttrValueDao skuSaleAttrValueDao;
+    @Test
+    public void testSaleAttrValueDao(){
+        List<SkuItemSaleAttrVo> saleAttrsBySpuId =
+                skuSaleAttrValueDao.getSaleAttrsBySpuId(4L);
+        System.out.println(saleAttrsBySpuId);
     }
 
 }
