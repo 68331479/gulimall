@@ -86,7 +86,7 @@ class GulimallProductApplicationTests {
         ops.set("hello","world"+ UUID.randomUUID().toString());
         //查询
         String s = ops.get("hello");
-        System.out.println("保存的数据是"+s);
+        System.out.println("保存的数据是:"+s);
     }
 
     @Autowired
