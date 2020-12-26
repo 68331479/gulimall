@@ -35,12 +35,7 @@ public class SkuItemVo {
 
 
 
-    @Data
-    public static class SkuItemSaleAttrVo{
-        private Long attrId;
-        private String attrName;
-        private List<String> attrValues;
-    }
+
 
 
 

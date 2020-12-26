@@ -5,6 +5,7 @@ import com.atguigu.common.utils.Query;
 import com.atguigu.gulimall.product.dao.SkuSaleAttrValueDao;
 import com.atguigu.gulimall.product.entity.SkuSaleAttrValueEntity;
 import com.atguigu.gulimall.product.service.SkuSaleAttrValueService;
+import com.atguigu.gulimall.product.vo.SkuItemSaleAttrVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -30,5 +31,12 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
     @Override
     public void saveSaleAttrs(List<SkuSaleAttrValueEntity> skuSaleAttrValueEntities) {
         this.saveBatch(skuSaleAttrValueEntities);
+    }
+
+    @Override
+    public List<SkuItemSaleAttrVo> getSaleAttrsBySpuId(Long spuId) {
+        List<SkuItemSaleAttrVo> saleAttrVos = baseMapper.getSaleAttrsBySpuId(spuId);
+
+        return saleAttrVos;
     }
 }
