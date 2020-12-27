@@ -598,9 +598,12 @@
 							<div class="box-attr clear" th:each="attr: ${item.saleAttr}">
 								<dl>
 									<dt>选择[[${attr.attrName}]]  </dt>
-									<dd th:each="val : ${#strings.listSplit(attr.attrValues,',')}">
-										<a href="/static/item/#">
-											<!--<img src="/static/item/img/59ddfcb1Nc3edb8f1.jpg" />--> [[${val}]]
+									<dd th:each="vals : ${attr.attrValues}">
+
+										<a class="sku_attr_value"
+										   th:attr="skuIds=${vals.skuIds},class=${#lists.contains(#strings.listSplit(vals.skuIds,','),item.info.skuId.toString())?'sku_attr_value checked':'sku_attr_value'}"
+										   >
+											<!--<img src="/static/item/img/59ddfcb1Nc3edb8f1.jpg" />--> [[${vals.attrValue}]]
 										</a>
 									</dd>
 								</dl>
@@ -1269,6 +1272,23 @@
 	<script src="/static/item/js/jquery1.9.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/static/item/js/js.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
+		$(".sku_attr_value").click(function () {
+			//1, 获取所有有 sku_attr_value check 属性的元素，
+
+
+			//3， 取出他们的交集， 得到skuId
+
+			//4, 跳转到对应的sku页面
+
+        });
+
+		//当前选择的sku颜色边框
+		$(function () {
+
+            $(".sku_attr_value").parent().css({"border": "solid 1px #CCC"})//清除边框 父节点
+            $("a[class='sku_attr_value checked']").parent().css({"border": "solid 1px red"})
+
+        })
 	</script>
 
 </html>
