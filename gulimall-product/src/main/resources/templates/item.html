@@ -1273,13 +1273,26 @@
 	<script src="/static/item/js/js.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		$(".sku_attr_value").click(function () {
-			//1, 获取所有有 sku_attr_value check 属性的元素，
-
-
+		    var skuArray=new Array();//创建skuArray用来存储属性组合数组[skuids,skuids....]
+			//1, 点击的元素添加自定义属性 ， 为了识别刚才被点击的
+			var curr = $(this).attr("skuIds").split(",");//得到当前点击行的属性skuids集合
+			//当前被点击的sku组合数组放进去
+            skuArray.push(curr);
+			//去掉同一行所有checked
+			$(this).parent().parent().find(".sku_attr_value").removeClass("checked");
+			$("a[class='sku_attr_value checked']").each(function(){
+                skuArray.push($(this).attr("skuIds").split(","));
+			});
+			//alert(skuArray);
+			//找到skuArray 里面数组的元素交集
 			//3， 取出他们的交集， 得到skuId。
-
+			var filterElement = skuArray[0];//第0个元素是当前的skuIds 数组
+			for(var i=1;i<skuArray.length;i++){//从第二个元素开始遍历，
+                filterElement = $(filterElement).filter(skuArray[i]);
+			}
+			console.log("选择的skuId："+filterElement[0]);//第0个元素就是交集
 			//4, 跳转到对应的sku页面
-
+           location.href="http://item.gulimall.com/"+filterElement[0]+".html";
         });
 
 		//当前选择的sku颜色边框

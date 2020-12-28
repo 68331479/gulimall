@@ -20,6 +20,9 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 @Service("skuInfoService")
@@ -106,29 +109,56 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         return skuInfoEntities;
     }
 
-    @Override
-    public SkuItemVo item(Long skuId) {
-        SkuItemVo skuItemVo=new SkuItemVo();
-        //1 , sku基本信息获取pms_sku_info
-        SkuInfoEntity info = baseMapper.selectById(skuId);
-        skuItemVo.setInfo(info);
-        Long catalogId = info.getCatalogId();
-        Long spuId = info.getSpuId();
-        //2 , sku图片信息 pms_sku_images
-        List<SkuImagesEntity> images =
-                skuImagesService.getImagesBySkuId(skuId);
-        skuItemVo.setImages(images);
-        //3 , spu销售属性组合
-        List<SkuItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.getSaleAttrsBySpuId(spuId);
-        skuItemVo.setSaleAttr(saleAttrVos);
-        //4 , spu 的属性 pms_spu_info_desc  图片介绍
-        SpuInfoDescEntity spuInfo = spuInfoDescService.getById(spuId);
-        skuItemVo.setDesc(spuInfo);
 
-        //5 , spu规格参数信息, 属性组（包含具体属性）
-        List<SpuItemAttrGroupAttrVo> attrGroupAttrVos
-            = attrGroupService.getAttrGroupWithAttrsBySpuId(spuId,catalogId);
-        skuItemVo.setGroupAttrs(attrGroupAttrVos);
+    @Autowired
+    ThreadPoolExecutor executor;
+
+    @Override
+    public SkuItemVo item(Long skuId) throws ExecutionException, InterruptedException {
+        SkuItemVo skuItemVo=new SkuItemVo();
+
+        CompletableFuture<SkuInfoEntity> infoFuture = CompletableFuture.supplyAsync(() -> {
+            //1 , sku基本信息获取pms_sku_info
+            SkuInfoEntity info = baseMapper.selectById(skuId);
+            skuItemVo.setInfo(info);
+            return info;
+        }, executor);
+        /**
+         * 3，4，5 依赖第一步的执行结果
+         */
+        CompletableFuture<Void> saleAttrFuture = infoFuture.thenAcceptAsync((res) -> {
+            //3 , spu销售属性组合
+            List<SkuItemSaleAttrVo> saleAttrVos = skuSaleAttrValueService.getSaleAttrsBySpuId(res.getSpuId());
+            skuItemVo.setSaleAttr(saleAttrVos);
+        }, executor);
+
+        CompletableFuture<Void> descFuture = infoFuture.thenAcceptAsync((res) -> {
+            //4 , spu 的属性 pms_spu_info_desc  图片介绍
+            SpuInfoDescEntity spuInfo = spuInfoDescService.getById(res.getSpuId());
+            skuItemVo.setDesc(spuInfo);
+        }, executor);
+
+        CompletableFuture<Void> baseAttrFuture = infoFuture.thenAcceptAsync((res) -> {
+            //5 , spu规格参数信息, 属性组（包含具体属性）
+            List<SpuItemAttrGroupAttrVo> attrGroupAttrVos
+                    = attrGroupService.getAttrGroupWithAttrsBySpuId(res.getSpuId(), res.getSkuId());
+            skuItemVo.setGroupAttrs(attrGroupAttrVos);
+        }, executor);
+
+
+        /**
+         * 与第一步的结果无关， 直接执行
+         */
+        CompletableFuture<Void> imagesFuture = CompletableFuture.runAsync(() -> {
+            //2 , sku图片信息 pms_sku_images
+            List<SkuImagesEntity> images =
+                    skuImagesService.getImagesBySkuId(skuId);
+            skuItemVo.setImages(images);
+        }, executor);
+
+        //等待所有任务都完成
+        CompletableFuture.allOf(saleAttrFuture,descFuture,baseAttrFuture,imagesFuture).get();
+
 
         return skuItemVo;
     }
