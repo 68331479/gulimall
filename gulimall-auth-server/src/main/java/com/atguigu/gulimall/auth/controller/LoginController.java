@@ -5,16 +5,24 @@ import com.atguigu.common.constant.AuthServerConstant;
 import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.auth.feign.ThirdPartFeignService;
+import com.atguigu.gulimall.auth.vo.UserRegisteVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @Author: LDeng
@@ -55,5 +63,27 @@ public class LoginController {
 
 
         return R.ok();
+    }
+
+    @PostMapping("/regist")
+    public String regist(@Valid UserRegisteVo vo, BindingResult result,Model model){
+        if(result.hasErrors()){
+//            result.getFieldErrors().stream().collect(Collectors.toMap(
+//                    fieldError->{ return fieldError.getField();},
+//                    fieldError->{ return fieldError.getDefaultMessage();}
+//                    )
+//                );
+            Map<String, String> errors = result.getFieldErrors()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            FieldError::getField, FieldError::getDefaultMessage
+                    ));
+            model.addAttribute("errors",errors);
+            //校验出错，带错误信息转发到注册页
+            return "foward:/reg.html";
+        }
+
+        //注册成功回首页, 登录页
+        return "redirect:/reg.html";
     }
 }
