@@ -3,6 +3,14 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
+    alicloud:
+          sms:
+            host: http://feginesms.market.alicloudapi.com
+            path: /codeNotice
+            appcode: e61bb4e4005f4fe0842a76932a9554b5
+            sign: 175622
+            skin: 13
   application:
     name: gulimall-third-party
 server:
