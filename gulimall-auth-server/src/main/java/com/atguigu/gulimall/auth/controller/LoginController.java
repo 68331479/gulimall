@@ -83,7 +83,7 @@ public class LoginController {
             return "foward:/reg.html";
         }
 
-        //注册成功回首页, 登录页
+        //注册成功回首页, 登录页。
         return "redirect:/reg.html";
     }
 }
