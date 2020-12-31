@@ -8,7 +8,9 @@ import com.atguigu.gulimall.member.exception.PhoneExistException;
 import com.atguigu.gulimall.member.exception.UsernameExistException;
 import com.atguigu.gulimall.member.feign.CouponFeignService;
 import com.atguigu.gulimall.member.service.MemberService;
+import com.atguigu.gulimall.member.vo.MemberLoginVo;
 import com.atguigu.gulimall.member.vo.MemberRegistVo;
+import com.atguigu.gulimall.member.vo.SocialUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +55,32 @@ public class MemberController {
         }
         return R.ok();
     }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo vo){//这里是接受auth传过来的json 所以使用@RequestBody
+
+        MemberEntity entity = memberService.login(vo);
+        if(entity!=null){
+            return R.ok();
+        }else {
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
+
+    }
+
+    @PostMapping("/oauth2/login")
+    public R oauthlogin(@RequestBody SocialUser socialUser) throws Exception {//这里是接受auth传过来的json 所以使用@RequestBody
+
+        MemberEntity entity = memberService.login(socialUser);
+        if(entity!=null){
+            return R.ok();
+        }else {
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(),BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
+
+    }
+
+
 
     /**
      * 列表

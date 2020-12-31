@@ -1,6 +1,7 @@
 package com.atguigu.gulimall.auth.feign;
 
 import com.atguigu.common.utils.R;
+import com.atguigu.gulimall.auth.vo.UserLoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegisteVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface MemberFeignService {
 
     @PostMapping("member/member/regist")
-    public R regist(@RequestBody UserRegisteVo vo);
+    R regist(@RequestBody UserRegisteVo vo);
+
+    @PostMapping("member/member/login")
+    R login(@RequestBody UserLoginVo vo);
 
 }

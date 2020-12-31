@@ -7,6 +7,7 @@ import com.atguigu.common.exception.BizCodeEnume;
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.auth.feign.MemberFeignService;
 import com.atguigu.gulimall.auth.feign.ThirdPartFeignService;
+import com.atguigu.gulimall.auth.vo.UserLoginVo;
 import com.atguigu.gulimall.auth.vo.UserRegisteVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,8 +120,21 @@ public class LoginController {
             redirectAttributes.addFlashAttribute("errors",errors);
             return "redirect:http://auth.gulimall.com/reg.html";
         }
-
-
-
     }
+
+    @PostMapping("/login")
+    public String login(UserLoginVo vo,RedirectAttributes redirectAttributes){//前端是用form提交的表单， 不是json 所以这里不能用@Requestbody 获取值
+        //远程登录
+        R login = memberFeignService.login(vo);
+        if(login.getCode()==0){
+            //登录成功
+            return "redirect:http://gulimall.com";
+        }else{
+            Map<String,String> errors=new HashMap<>();
+            errors.put("msg",login.getData("msg",new TypeReference<String>(){}));
+            redirectAttributes.addFlashAttribute("errors",errors);
+            return "redirect:http://auth.gulimall.com/login.html";
+        }
+    }
+
 }
