@@ -25,7 +25,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -61,7 +60,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encode=passwordEncoder.encode(vo.getPassword());
         memberEntity.setPassword(encode);
-
+        memberEntity.setNickname(vo.getUsername());
         //其他默认信息
 
         //保存

@@ -8,10 +8,11 @@ package com.atguigu.gulimall.auth.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.atguigu.common.constant.AuthServerConstant;
 import com.atguigu.common.utils.HttpUtils;
 import com.atguigu.common.utils.R;
+import com.atguigu.common.vo.MemberRespVo;
 import com.atguigu.gulimall.auth.feign.MemberFeignService;
-import com.atguigu.gulimall.auth.vo.MemberRespVo;
 import com.atguigu.gulimall.auth.vo.SocialUser;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -61,8 +62,9 @@ public class OAuth2Controller {
                 });
                 System.out.println("登录成功：用户信息为："+ data);
                 //子域之间  gulimall.com auth.gulimall.com order.gulimall.com
-                //发Session的时候， 即使是子域系统发的，也能让父域使用， 方法是是指定父域名
-                session.setAttribute("loginUser",data);
+                //todo:发Session的时候， 即使是子域系统发的，也能让父域使用， 方法是是指定父域名
+                //todo:使用json的序列化方式来序列化对象到redis， 而不是jdk的16进制
+                session.setAttribute(AuthServerConstant.LOGIN_USER,data);
                 // 登录成功跳转回首页
                 return "redirect:http://gulimall.com";
             } else {
