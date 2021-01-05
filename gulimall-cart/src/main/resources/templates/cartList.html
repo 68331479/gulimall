@@ -95,7 +95,8 @@
 							</div>
                    			 <div>
                       			  <ol>
-										<li><input type="checkbox"  class="check" th:checked="${item.check}"></li>
+										<li><input type="checkbox"  class="itemcheck" th:attr="skuId=${item.skuId}"
+												   th:checked="${item.check}"></li>
 										<li>
 											<dt><img th:src="${item.image}" alt=""></dt>
 											<dd style="width: 400px;">
@@ -772,6 +773,13 @@
 			$(this).children("p").children("img").attr("src", "img/one_mian_gwc2.png")
 		}).mouseout(function() {
 			$(this).children("p").children("img").attr("src", "img/one_mian_gwc1.png")
-		})
+		});
+
+		$(".itemcheck").click(function () {
+			var skuId = $(this).attr("skuId");
+			var check = $(this).prop("checked");
+			location.href="http://cart.gulimall.com/checkItem?skuId="+skuId+"&check="+(check?1:0);
+        });
+
 	</script>
 </html>

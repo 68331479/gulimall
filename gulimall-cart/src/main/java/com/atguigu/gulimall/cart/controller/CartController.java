@@ -35,6 +35,13 @@ public class CartController {
      * @param
      * @return
      */
+
+    @GetMapping("/checkItem")
+    public String checkItem(@RequestParam("skuId") Long skuId,@RequestParam("check") Integer check){
+        cartService.checkItem(skuId,check);
+        return "redirect:http://cart.gulimall.com/cart.html";
+    }
+
     @GetMapping("/cart.html")
     public String cartListPage(Model model) throws ExecutionException, InterruptedException {
 

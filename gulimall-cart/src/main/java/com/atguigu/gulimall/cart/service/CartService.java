@@ -21,4 +21,7 @@ public interface CartService {
 
     //清空购物车
     void clearCart(String cartKey);
+
+    //勾选购物项
+    void checkItem(Long skuId, Integer check);
 }
