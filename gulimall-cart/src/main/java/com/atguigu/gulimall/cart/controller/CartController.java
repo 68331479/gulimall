@@ -2,6 +2,7 @@ package com.atguigu.gulimall.cart.controller;
 
 import com.atguigu.gulimall.cart.interceptor.CartInterceptor;
 import com.atguigu.gulimall.cart.service.CartService;
+import com.atguigu.gulimall.cart.vo.Cart;
 import com.atguigu.gulimall.cart.vo.CartItem;
 import com.atguigu.gulimall.cart.vo.UserInfoTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,15 @@ public class CartController {
      * @return
      */
     @GetMapping("/cart.html")
-    public String cartListPage(){
+    public String cartListPage(Model model) throws ExecutionException, InterruptedException {
 
         //1,通过threadlocal得到用户信息id, user-key
         UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
-
         System.out.println(userInfoTo);
+        Cart cart =cartService.getCart();
+        System.out.println(cart);
+        System.out.println(cart.getTotalAmount());
+        model.addAttribute("cart",cart);
         return "cartList";
     }
 

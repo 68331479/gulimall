@@ -60,7 +60,7 @@ public class Cart {
         if(items!=null && items.size()>0){
             for (CartItem item : items) {
                 BigDecimal totalPrice = item.getTotalPrice();
-                amount.add(totalPrice);
+                amount=amount.add(totalPrice);
             }
         }
         //减去优惠总价
@@ -75,5 +75,16 @@ public class Cart {
 
     public void setReduce(BigDecimal reduce) {
         this.reduce = reduce;
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "items=" + items +
+                ", countNum=" + countNum +
+                ", countType=" + countType +
+                ", totalAmount=" + totalAmount +
+                ", reduce=" + reduce +
+                '}';
     }
 }
