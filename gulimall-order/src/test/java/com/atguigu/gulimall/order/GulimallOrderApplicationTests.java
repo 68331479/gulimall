@@ -75,7 +75,6 @@ class GulimallOrderApplicationTests {
                                         null);
         amqpAdmin.declareBinding(binding);
         log.info("Binding[{}]创建成功","hello-java-binding");
-
     }
 
 }
