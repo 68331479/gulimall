@@ -16,6 +16,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -38,7 +39,16 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
     @RabbitHandler
     public void receiveMessage(Message message,
                                OrderReturnReasonEntity content,
-                               Channel channel){//Channel 是当前传输数据的通道
+                               Channel channel) {//Channel 是当前传输数据的通道
+        System.out.println("接收到消息");
+        long deliveryTag = message.getMessageProperties().getDeliveryTag();//deliveryTag 通道内自增
+        System.out.println("deliveryTag:"+deliveryTag);
+        try {
+            channel.basicAck(deliveryTag,false);//签收,非批量
+            System.out.println("签收了货物"+deliveryTag);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("OrderReturnReasonEntity");
     }
 

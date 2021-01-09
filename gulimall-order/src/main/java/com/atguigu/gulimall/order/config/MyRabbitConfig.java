@@ -1,4 +1,4 @@
-package com.atguigu.gulimall.config;
+package com.atguigu.gulimall.order.config;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.CorrelationData;

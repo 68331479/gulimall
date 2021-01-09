@@ -1,0 +1,24 @@
+package com.atguigu.gulimall.order.vo;
+
+import lombok.Data;
+
+/**
+ * @Author: LDeng
+ * @Date: 2021-01-09 15:50
+ */
+
+@Data
+public class MemberAddressVo {
+
+    private Long id;
+    private Long memberId;
+    private String name;
+    private String phone;
+    private String postCode;
+    private String province;
+    private String city;
+    private String region;
+    private String detailAddress;
+    private String areacode;
+    private Integer defaultStatus;
+}
