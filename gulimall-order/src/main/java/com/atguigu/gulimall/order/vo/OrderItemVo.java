@@ -19,5 +19,9 @@ public class OrderItemVo {
     private BigDecimal price;
     private Integer count;
     private BigDecimal totalPrice;// 计算得来， 所以不用@Data 注解
+    //private Boolean hasStock=true;//TODO: 查询库存状态
+    private BigDecimal weight;
+
+
 
 }
