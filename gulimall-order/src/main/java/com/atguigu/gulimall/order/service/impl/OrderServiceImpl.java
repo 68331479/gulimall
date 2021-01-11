@@ -10,6 +10,7 @@ import com.atguigu.gulimall.order.constant.OrderConstant;
 import com.atguigu.gulimall.order.dao.OrderDao;
 import com.atguigu.gulimall.order.entity.OrderEntity;
 import com.atguigu.gulimall.order.entity.OrderItemEntity;
+import com.atguigu.gulimall.order.enume.OrderStatusEnum;
 import com.atguigu.gulimall.order.feign.CartFeignService;
 import com.atguigu.gulimall.order.feign.MemberFeignService;
 import com.atguigu.gulimall.order.feign.ProductFeignService;
@@ -30,6 +31,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +144,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         }else{
             //验证成功, 进入下单逻辑
             OrderCreateTo order = createOrder();
+            //验价
+            BigDecimal payAmount = order.getOrder().getPayAmount();
+            BigDecimal payPrice = vo.getPayPrice();
+            if(Math.abs(payAmount.subtract(payPrice).doubleValue())<0.01){//价差小于0.01，对比成功
 
+            }else{//对比失败
+                response.setCode(2);
+                return response;
+            }
         }
         return response;
     }
@@ -157,7 +167,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         //2， 获取到所有订单项
         List<OrderItemEntity> orderItemEntities = buildOrderItems(orderSn);
 
-        //3, 计算价格
+        //3, 计算价格,积分等信息
         computePrice(orderEntity,orderItemEntities);
 
         return createTo;
@@ -166,6 +176,40 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     private void computePrice(OrderEntity orderEntity, List<OrderItemEntity> orderItemEntities) {
         //订单价格相关
+        BigDecimal total = new BigDecimal("0.0");
+        BigDecimal coupon = new BigDecimal("0.0");
+        BigDecimal integration = new BigDecimal("0.0");
+        BigDecimal promotion =new BigDecimal("0.0");
+        BigDecimal gift =new BigDecimal("0.0");
+        BigDecimal growth =new BigDecimal("0.0");
+        for (OrderItemEntity entity : orderItemEntities) {
+            //订单总额叠加每个订单项的总额
+            total = total.add(entity.getRealAmount());
+            coupon = coupon.add(entity.getCouponAmount());
+            integration=integration.add(entity.getIntegrationAmount());
+            promotion=promotion.add(entity.getPromotionAmount());
+
+            gift.add(new BigDecimal(entity.getGiftIntegration().toString()));
+            growth.add(new BigDecimal(entity.getGiftGrowth().toString()));
+
+        }
+        //订单总额
+        orderEntity.setTotalAmount(total);
+        orderEntity.setPromotionAmount(promotion);
+        orderEntity.setCouponAmount(coupon);
+        orderEntity.setIntegrationAmount(integration);
+        //设置应付总额（订单总额+运费）
+        orderEntity.setPayAmount(total.add(orderEntity.getFreightAmount()));
+
+        //积分，成长值
+        orderEntity.setIntegration(gift.intValue());
+        orderEntity.setGrowth(growth.intValue());
+
+        //订单删除状态
+        orderEntity.setDeleteStatus(0);//未删除
+
+
+
     }
 
     private OrderEntity buildOrder(String orderSn) {
@@ -186,6 +230,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         entity.setReceiverName(fareResp.getAddress().getName());
         entity.setReceiverPhone(fareResp.getAddress().getPhone());
         entity.setReceiverPostCode(fareResp.getAddress().getPostCode());
+
+        //设置订单的状态信息
+        entity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
+        entity.setAutoConfirmDay(7);//默认7天自动收货
 
         return entity;
     }
@@ -236,9 +284,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         itemEntity.setSkuQuantity(cartItem.getCount());
         //4，优惠信息（暂忽略）
         //5, 积分信息
-        itemEntity.setGiftGrowth(cartItem.getPrice().intValue());
-        itemEntity.setGiftIntegration(cartItem.getPrice().intValue());
+        itemEntity.setGiftGrowth(cartItem.getPrice().multiply(new BigDecimal(cartItem.getCount().toString())).intValue());
+        itemEntity.setGiftIntegration(cartItem.getPrice().multiply(new BigDecimal(cartItem.getCount().toString())).intValue());
 
+        //6, 订单项的价格信息
+        itemEntity.setPromotionAmount(new BigDecimal("0.0"));
+        itemEntity.setCouponAmount(new BigDecimal("0.0"));
+        itemEntity.setIntegrationAmount(new BigDecimal("0.0"));
+        //当前订单项的实际金额
+        BigDecimal orign = itemEntity.getSkuPrice().multiply(new BigDecimal(itemEntity.getSkuQuantity().toString()));
+        BigDecimal subtract = orign.subtract(itemEntity.getPromotionAmount())
+                .subtract(itemEntity.getCouponAmount())
+                .subtract(itemEntity.getIntegrationAmount());
+        itemEntity.setRealAmount(subtract);
         return itemEntity;
     }
 
