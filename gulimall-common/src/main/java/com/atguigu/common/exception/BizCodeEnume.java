@@ -12,6 +12,7 @@ package com.atguigu.common.exception;
  * 13： 购物车
  * 14： 物流
  * 15： 用户模块
+ * 21： 库存服务
  */
 
 
@@ -22,7 +23,8 @@ public enum BizCodeEnume {
     SMS_CODE_EXCEPTION(10002,"刷新短信验证码频率太高"),
     USER_EXIST_EXCEPTION(150001,"用户已经存在异常"),
     PHONE_EXIST_EXCEPTION(150002,"手机号已经存在异常"),
-    LOGINACCT_PASSWORD_INVAILD_EXCEPTION(150003,"账号或者密码错误");
+    LOGINACCT_PASSWORD_INVAILD_EXCEPTION(150003,"账号或者密码错误"),
+    NO_STOCK_EXCEPTION(21000,"商品库存不足");
 
     private int code;
     private String msg;
