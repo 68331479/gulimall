@@ -30,6 +30,15 @@ public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
 
+    /**
+     *
+     * 库存解锁的场景
+     * 1） 下单成功， 订单过期没有支付，被系统自动取消， 被用户手动取消， 都要解锁库存
+     * 2） 下单成功，库存锁定成功， 接下来的业务调用失败，导致订单回滚，之前锁定的库存就要自动解锁
+     *
+     * @param vo
+     * @return
+     */
     @PostMapping("/lock/order")
     public R orderLock(@RequestBody WareSkuLockVo vo){
        try {
