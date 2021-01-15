@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
-@Service("orderService")
+@Service("orderService")//。。
 public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> implements OrderService {
 
     private ThreadLocal<OrderSubmitVo> confirmVoThreadLocal = new ThreadLocal<>();
