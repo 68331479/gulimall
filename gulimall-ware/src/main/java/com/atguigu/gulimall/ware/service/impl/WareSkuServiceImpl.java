@@ -3,6 +3,7 @@ package com.atguigu.gulimall.ware.service.impl;
 import com.alibaba.fastjson.TypeReference;
 import com.atguigu.common.exception.NoStockException;
 import com.atguigu.common.to.SkuHasStockVo;
+import com.atguigu.common.to.mq.OrderTo;
 import com.atguigu.common.to.mq.StockDetailTo;
 import com.atguigu.common.to.mq.StockLockedTo;
 import com.atguigu.common.utils.PageUtils;
@@ -53,6 +54,27 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 
     @Autowired
     WareOrderTaskDetailService wareOrderTaskDetailService;
+
+    @Transactional
+    @Override//重载一个解锁库存的方法
+    public void unLockStock(OrderTo orderTo) {
+        String orderSn = orderTo.getOrderSn();
+        //查询最新的库存解锁状态，防止重复解锁
+        WareOrderTaskEntity taskEntity = wareOrderTaskService.getOrderTaskByOrderSn(orderSn);
+        Long taskId = taskEntity.getId();
+        //按照库存工作单，找到所有工作单明细
+        List<WareOrderTaskDetailEntity> taskDetailEntities =
+                wareOrderTaskDetailService.list(new QueryWrapper<WareOrderTaskDetailEntity>()
+                        .eq("task_id", taskId)
+                        .eq("lock_status",1));
+        for (WareOrderTaskDetailEntity taskDetailEntity : taskDetailEntities) {
+            unLockStock(taskDetailEntity.getSkuId(),
+                    taskDetailEntity.getWareId(),
+                    taskDetailEntity.getSkuNum(),
+                    taskDetailEntity.getId());
+        }
+
+    }
 
     @Override
     public void unLockStock(StockLockedTo to) {
