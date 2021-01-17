@@ -55,6 +55,16 @@
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
+        <!--支付宝依赖-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.9.28.ALL</version>
+        </dependency>
+
+
+
         <!--redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

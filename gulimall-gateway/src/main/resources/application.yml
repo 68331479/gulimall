@@ -74,5 +74,9 @@ spring:
           predicates:
             - Host=order.gulimall.com
 
+        - id: gulimall_order_route
+          uri: lb://gulimall-member
+          predicates:
+            - Host=member.gulimall.com
 
 ## 前端项目都带上/api
