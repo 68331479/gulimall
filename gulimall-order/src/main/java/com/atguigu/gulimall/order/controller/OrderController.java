@@ -46,7 +46,7 @@ public class OrderController {
     /**
      *分页查询当前登录用户的所有订单
      */
-    @GetMapping("/listWithItem")
+    @PostMapping("/listWithItem")
     //@RequiresPermissions("order:order:list")
     public R listWithItem(@RequestBody Map<String, Object> params){
         PageUtils page = orderService.queryPageWithItem(params);

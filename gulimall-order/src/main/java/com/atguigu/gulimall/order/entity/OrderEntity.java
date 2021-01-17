@@ -1,5 +1,6 @@
 package com.atguigu.gulimall.order.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -191,6 +192,7 @@ public class OrderEntity implements Serializable {
 	 */
 	private Date modifyTime;
 
+	@TableField(exist = false)
 	private List<OrderItemEntity> itemEntities;
 
 }

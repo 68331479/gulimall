@@ -27,7 +27,7 @@ public class MemberWebController {
     public String memberOrderPage(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, Model model){
         //查出当前登录的用户所有订单列表数据
         Map<String,Object> page=new HashMap<>();
-        page.put("page",pageNum);
+        page.put("page",pageNum.toString());
         R r = orderFeignService.listWithItem(page);
         model.addAttribute("orders",r);
         return "orderList";

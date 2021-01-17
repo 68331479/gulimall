@@ -23,7 +23,7 @@ public class AlipayTemplate {
     private  String alipay_public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgxMUmPdbjCMJ8LJ7k81tDLUfEcS0hHZG1Znc/+0cS0LppyzadHkoiR/s76CgG1Q9S+4TQwHKGa+4orE+E7aWeWsPU6pfolWWIBWHJ0LeY1E+Wi6vSaRk2l6QCsTLIpq9+d75gtgKkh7szKe4S2ocH1GxHCHQ1bbITNt4ewrnNt9Hj/jvl8yKqTycnj2Svu3AhH/ZX5xHa6GHd5GQ75fMwozRbd8OYOpjPn1PKZ88gt47lzDIJKW2066z2tyZ7ED22nbVcd0ldJKFU/yk6J9v2+K6xSHtUaL9uALWRiX9bOptOIg4zWrJr1wewiVJmMSbU2AunRCUfD8BZ4girVSDiwIDAQAB";
     // 服务器[异步通知]页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
     // 支付宝会悄悄的给我们发送一个请求，告诉我们支付成功的信息
-    private  String notify_url="http://l056yrczwe.52http.tech/alipay.trade.page.pay-JAVA-UTF-8/notify_url.jsp";
+    private  String notify_url="http://l056yrczwe.52http.tech/payed/notify";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
     //同步通知，支付成功，一般跳转到成功页
