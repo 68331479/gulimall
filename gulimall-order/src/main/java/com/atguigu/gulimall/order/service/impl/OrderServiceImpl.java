@@ -445,16 +445,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         //2, 修改订单状态信息
         if(vo.getTrade_status().equals("TRADE_SUCCESS") || vo.getTrade_status().equals("FINISHED")){
             //支付成功，修改订单状态
-            String out_trade_no = vo.getOut_trade_no();
-            this.updateOrderStatus(out_trade_no,OrderStatusEnum.PAYED.getCode());
+            String outTradeNo= vo.getOut_trade_no();
+            baseMapper.updateOrderStatus(outTradeNo,OrderStatusEnum.PAYED.getCode());
         }
         return "success";
     }
 
-    private void updateOrderStatus(String out_trade_no, Integer code) {
 
-
-    }
 
 
 }
