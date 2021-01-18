@@ -20,6 +20,15 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        - id: coupon_route
+          uri: lb://gulimall-coupon
+          predicates:
+            - Path=/api/coupon/**
+            ##路径重写 请求地址  http://localhost:88/api/product/category/list/tree-->
+            ##         重写为   http://localhost:10000/product/category/list/tree
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: third_party_route
           uri: lb://gulimall-third-party
           predicates:

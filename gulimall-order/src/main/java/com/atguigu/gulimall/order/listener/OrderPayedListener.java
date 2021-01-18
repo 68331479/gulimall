@@ -50,18 +50,19 @@ public class OrderPayedListener {
                         : valueStr + values[i] + ",";
             }
             //乱码解决，这段代码在出现乱码时使用
-            valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             params.put(name, valueStr);
         }
 
         boolean signVerified = AlipaySignature.rsaCheckV1(params, alipayTemplate.getAlipay_public_key(), alipayTemplate.getCharset(), alipayTemplate.getSign_type()); //调用SDK验证签名
         if (signVerified) {
             //签名验证成功
-            System.out.println("验证支付宝签名成功，可以调用处理订单业务-修改订单状态支付成功");
+            System.out.println("支付宝回调成功，验证支付宝签名成功，可以调用处理订单业务-修改订单状态支付成功");
             String result = orderService.handlePayResult(vo);
             //支付宝只接受这个success字符串回复， 再收到success之后就不再通知
             return result;
         } else {
+            System.out.println("支付宝回调成功，验证支付宝签名失败");
             return "error";
         }
     }
