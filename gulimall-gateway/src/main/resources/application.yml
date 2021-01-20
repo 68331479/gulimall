@@ -88,4 +88,9 @@ spring:
           predicates:
             - Host=member.gulimall.com
 
+        - id: gulimall_seckill_route
+          uri: lb://gulimall-seckill
+          predicates:
+            - Host=seckill.gulimall.com
+
 ## 前端项目都带上/api

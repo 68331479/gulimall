@@ -21,6 +21,7 @@ public class ItemController {
     @Autowired
     SkuInfoService skuInfoService;
 
+
     /*
     展示当前sku的详情
      */
