@@ -520,7 +520,7 @@
 
 									<span th:if="${#dates.createNow().getTime()>=item.seckillInfo.startTime &&
 									#dates.createNow().getTime()<=item.seckillInfo.endTime}">
-									商品正在秒杀， 秒杀价格是:￥
+									商品正在秒杀， 秒杀价:￥
 										[[${#numbers.formatDecimal(item.seckillInfo.seckillPrice,1,2)}]]
 									</span>
 
@@ -644,8 +644,8 @@
 
 								</div>
 							</div>
-							<div class="box-btns-two" th:if="${#dates.createNow().getTime()>=item.seckillInfo.startTime &&
-									#dates.createNow().getTime()<=item.seckillInfo.endTime}">
+							<div class="box-btns-two" th:if="${(item.seckillInfo!=null)&&(#dates.createNow().getTime()>=item.seckillInfo.startTime &&
+									#dates.createNow().getTime()<=item.seckillInfo.endTime)}">
 								<a href="#" id="secKillA"
 								   	th:attr="skuId=${item.info.skuId},
 								   			 sessionId=${item.seckillInfo.promotionSessionId},
@@ -653,8 +653,8 @@
 									立即抢购
 								</a>
 							</div>
-							<div class="box-btns-two" th:if="${#dates.createNow().getTime()<item.seckillInfo.startTime &&
-									#dates.createNow().getTime()>item.seckillInfo.endTime}">
+							<div class="box-btns-two" th:if="${(item.seckillInfo==null)||(#dates.createNow().getTime()<item.seckillInfo.startTime &&
+									#dates.createNow().getTime()>item.seckillInfo.endTime)}">
 								<a href="#" id="addToCartA" th:attr="skuId=${item.info.skuId}">
 									加入购物车
 								</a>

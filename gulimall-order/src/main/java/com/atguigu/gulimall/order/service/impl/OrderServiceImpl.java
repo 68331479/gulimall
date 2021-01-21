@@ -460,6 +460,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         orderEntity.setMemberId(seckillOrderTo.getMemberId());
         orderEntity.setNote(seckillOrderTo.getPromotionSessionId().toString());
         orderEntity.setTotalAmount(seckillOrderTo.getSeckillPrice().multiply(BigDecimal.valueOf(seckillOrderTo.getNum())));
+        orderEntity.setPayAmount(seckillOrderTo.getSeckillPrice().multiply(BigDecimal.valueOf(seckillOrderTo.getNum())));
         orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
         baseMapper.insert(orderEntity);
 

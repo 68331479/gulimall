@@ -105,6 +105,23 @@
     <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.mapstruct:mapstruct:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: io.springfox:springfox-swagger-ui:2.7.0" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel:2.0.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.cloud:spring-cloud-alibaba-sentinel:2.0.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-transport-simple-http:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-transport-common:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-datasource-extension:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-annotation-aspectj:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-core:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.9.6" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-web-servlet:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-spring-webflux-adapter:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-reactor-adapter:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-parameter-flow-control:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-cluster-server-default:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-cluster-common-default:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.csp:sentinel-cluster-client-default:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.cloud:spring-cloud-alibaba-sentinel-datasource:2.0.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.3.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.3.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.3.7.RELEASE" level="project" />
