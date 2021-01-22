@@ -25,7 +25,7 @@ public class SeckillController {
     @Autowired
     SeckillService seckillService;
     /**
-     * 返回当前时间可以参与的秒杀商品信息
+     * 返回当前时间可以参与的秒杀商品信息,
      * @return
      */
     @ResponseBody
