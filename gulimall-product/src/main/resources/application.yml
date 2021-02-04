@@ -28,9 +28,5 @@
 #    date-format: yyyy-MM-dd HH:mm:ss
 #    time-zone: GMT+8
 
-spring:
-  redis:
-    host: 192.168.31.101
-    port: 6379
 #server:
 #  port: 10000
